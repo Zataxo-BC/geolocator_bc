@@ -56,9 +56,9 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   @Nullable private ActivityPluginBinding pluginBinding;
 
   public GeolocatorPlugin() {
-    permissionManager = PermissionManager.getInstance();
-    geolocationManager = GeolocationManager.getInstance();
-    locationAccuracyManager = LocationAccuracyManager.getInstance();
+   permissionManager = new PermissionManager();
+   geolocationManager = new GeolocationManager();
+   locationAccuracyManager = new LocationAccuracyManager();
   }
 
   @Override
@@ -131,7 +131,10 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   }
 
   private void registerListeners() {
-    if (pluginBinding != null) {
+    if (pluginRegistrar != null) {
+      pluginRegistrar.addActivityResultListener(this.geolocationManager);
+      pluginRegistrar.addRequestPermissionsResultListener(this.permissionManager);
+    } else if (pluginBinding != null) {
       pluginBinding.addActivityResultListener(this.geolocationManager);
       pluginBinding.addRequestPermissionsResultListener(this.permissionManager);
     }
